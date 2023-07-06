@@ -270,15 +270,3 @@ function createCarousel(
   }
 }
 
-// Usage:
-createCarousel(".client-logos", ".client-logo", ".prev", ".next", {
-  endless: true,
-  autoplay: true,
-  autoplaySpeed: 5000,
-  arrowButtons: true,
-  touchSwipe: true,
-  keyboardControls: true,
-  dynamicDots: false,
-  autoplayPauseOnHover: false,
-  resetOnInteraction: false,
-});
