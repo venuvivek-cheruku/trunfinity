@@ -12,7 +12,13 @@ function createCarousel(
   let isTransitioning = false; // Flag to track transition state
 
   let totalImages = images.length;
-  let imageGap = 0; // Adjust the gap between images as needed
+
+  const carouselStyles = window.getComputedStyle(carousel);
+
+  // Extract the value of the 'gap' property from the computed style
+  let imageGap = parseFloat(carouselStyles.gap);
+
+  console.log(imageGap);
 
   /// Set up options (including the new option for dynamic dots)
   const {
@@ -39,8 +45,6 @@ function createCarousel(
       logo.classList.add("original-slide");
       clone.classList.add("cloned-slide");
     });
-
-    console.log(totalImages);
 
     prevIndex = currentIndex = 0;
   }
@@ -84,7 +88,6 @@ function createCarousel(
       carousel.style.transform = `translateX(-${totalWidth}px)`;
       setTimeout(() => {
         carousel.appendChild(images[prevIndex]);
-        console.log(carousel.firstChild);
         carousel.style.transition = "none";
         carousel.style.transform = "";
         isTransitioning = false;
@@ -129,6 +132,10 @@ function createCarousel(
     }
 
     images.forEach((_, index) => {
+      // Skip creating dots for cloned slides
+      if (index >= totalImages / 2) {
+        return;
+      }
       createDot(index);
     });
 
@@ -269,4 +276,3 @@ function createCarousel(
     });
   }
 }
-
