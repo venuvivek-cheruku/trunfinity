@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+      integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="style.css" />
+    <title>Sample</title>
+  </head>
+  <body>
+    <!-- Sample Slider one -->
+    <section id="slider-one">
+      <div class="inner-container">
+        <h1>Carousel One</h1>
+        <div class="slider-container slider-one--slider-container">
+          <div id="left" class="slider-arrow slider-one--arrow-left">
+            <i class="fa fa-arrow-alt-circle-left"></i>
+          </div>
+          <div class="slider slider-one--slider">
+            <div class="slide slider-one--slide">Slide One</div>
+            <div class="slide slider-one--slide">Slide Two</div>
+            <div class="slide slider-one--slide">Slide Three</div>
+            <div class="slide slider-one--slide">Slide Four</div>
+            <div class="slide slider-one--slide">Slide Five</div>
+            <div class="slide slider-one--slide">Slide Six</div>
+            <div class="slide slider-one--slide">Slide Seven</div>
+          </div>
+          <div id="right" class="slider-arrow slider-one--arrow-right">
+            <i class="fa fa-arrow-alt-circle-right"></i>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sample Slider two -->
+    <section id="slider-two">
+      <div class="inner-container">
+        <h1>Carousel Two</h1>
+        <div class="slider-container slider-two--slider-container">
+          <div id="left" class="slider-arrow slider-two--arrow-left">
+            <i class="fa fa-arrow-alt-circle-left"></i>
+          </div>
+          <div class="slider slider-two--slider">
+            <div class="slide slider-two--slide">Slide One</div>
+            <div class="slide slider-two--slide">Slide Two</div>
+            <div class="slide slider-two--slide">Slide Three</div>
+            <div class="slide slider-two--slide">Slide Four</div>
+            <div class="slide slider-two--slide">Slide Five</div>
+            <div class="slide slider-two--slide">Slide Six</div>
+            <div class="slide slider-two--slide">Slide Seven</div>
+          </div>
+          <div id="right" class="slider-arrow slider-two--arrow-right">
+            <i class="fa fa-arrow-alt-circle-right"></i>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sample Slider three -->
+    <section id="slider-three">
+      <div class="inner-container">
+        <h1>Carousel Three</h1>
+        <div class="slider-container slider-three--slider-container">
+          <div class="slider slider-three--slider">
+            <div class="slide slider-three--slide">Slide One</div>
+            <div class="slide slider-three--slide">Slide Two</div>
+            <div class="slide slider-three--slide">Slide Three</div>
+            <div class="slide slider-three--slide">Slide Four</div>
+            <div class="slide slider-three--slide">Slide Five</div>
+            <div class="slide slider-three--slide">Slide Six</div>
+            <div class="slide slider-three--slide">Slide Seven</div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <script src="./trunfinity.js"></script>
+    <script>
+      createCarousel(
+        ".slider-one--slider",
+        ".slider-one--slide",
+        ".slider-one--arrow-left",
+        ".slider-one--arrow-right",
+        {
+          endless: true,
+          autoplay: true,
+          autoplaySpeed: 5000,
+          arrowButtons: true,
+          touchSwipe: true,
+          keyboardControls: true,
+          dynamicDots: false,
+          autoplayPauseOnHover: false,
+          resetOnInteraction: false,
+        }
+      );
+
+      createCarousel(
+        ".slider-two--slider",
+        ".slider-two--slide",
+        ".slider-two--arrow-left",
+        ".slider-two--arrow-right",
+        {
+          endless: true,
+          autoplay: true,
+          autoplaySpeed: 5000,
+          arrowButtons: true,
+          touchSwipe: true,
+          keyboardControls: true,
+          dynamicDots: false,
+          autoplayPauseOnHover: true,
+          resetOnInteraction: false,
+        }
+      );
+
+      createCarousel(
+        ".slider-three--slider",
+        ".slider-three--slide",
+        ".slider-three--arrow-left",
+        ".slider-three--arrow-right",
+        {
+          endless: true,
+          autoplay: true,
+          autoplaySpeed: 5000,
+          arrowButtons: true,
+          touchSwipe: true,
+          keyboardControls: true,
+          dynamicDots: true,
+          autoplayPauseOnHover: true,
+          resetOnInteraction: false,
+        }
+      );
+    </script>
+  </body>
+</html>
