@@ -24,13 +24,14 @@ function createCarousel(
   const {
     endless = false,
     autoplay = false,
-    arrowButtons = false,
+    arrowButtonsControls = false,
     touchSwipe = false,
     keyboardControls = false,
     autoplaySpeed = 3000,
+    mouseDrag = false,
     dynamicDots = false,
     autoplayPauseOnHover = false,
-    resetOnInteraction = false,
+    resetOnInteraction = true,
   } = options;
 
   if (endless && totalImages > 1) {
@@ -53,11 +54,12 @@ function createCarousel(
     if (totalImages <= 1 || isTransitioning) return; // Prevent double click during transition
     isTransitioning = true;
 
-    const imageWidth = images[0].offsetWidth;
-    const totalWidth = imageWidth + imageGap;
-
     prevIndex = currentIndex;
     currentIndex = (currentIndex - 1 + totalImages) % totalImages;
+
+    const imageWidth = images[currentIndex].offsetWidth;
+    const totalWidth = imageWidth + imageGap;
+
     if (carousel) {
       carousel.style.transform = `translateX(-${totalWidth}px)`;
       carousel.insertBefore(images[currentIndex], carousel.firstChild);
@@ -81,8 +83,10 @@ function createCarousel(
 
     prevIndex = currentIndex;
     currentIndex = (currentIndex + 1) % totalImages;
+
     if (carousel) {
-      const imageWidth = images[0].offsetWidth;
+      console.log(prevIndex);
+      const imageWidth = images[prevIndex].offsetWidth;
       const totalWidth = imageWidth + imageGap;
       carousel.style.transition = "transform 0.5s ease-in-out";
       carousel.style.transform = `translateX(-${totalWidth}px)`;
@@ -126,7 +130,7 @@ function createCarousel(
         handleLeftArrowClick(-diff);
       }
 
-      if (autoplay) {
+      if (autoplay && resetOnInteraction) {
         resetAutoplay();
       }
     }
@@ -155,47 +159,96 @@ function createCarousel(
       if (currentDot) currentDot.classList.add("active-dot");
     }
   }
+
   // Arrow Keys
-  if (arrowButtons) {
+  if (arrowButtonsControls) {
     const leftArrow = document.querySelector(prevBtn);
     const rightArrow = document.querySelector(nextBtn);
     if (leftArrow && rightArrow) {
       leftArrow.addEventListener("click", () => {
         handleLeftArrowClick();
-        if (autoplay) {
+        if (autoplay && resetOnInteraction) {
           resetAutoplay(); // Add resetAutoplay function call
         }
       });
       rightArrow.addEventListener("click", () => {
         handleRightArrowClick();
-        if (autoplay) {
+        if (autoplay && resetOnInteraction) {
           resetAutoplay(); // Add resetAutoplay function call
         }
       });
-      if (resetOnInteraction) {
-        leftArrow.addEventListener("click", resetAutoplay);
-        rightArrow.addEventListener("click", resetAutoplay);
+    }
+  }
+
+  // Drag swipe
+  function addDragFunctionality() {
+    let isDragging = false;
+    let startX = 0;
+    let endX = 0;
+
+    function handleMouseDown(event) {
+      isDragging = true;
+      startX = event.clientX;
+      images.forEach((image) => {
+        image.style.cursor = "grabbing";
+      });
+    }
+
+    function handleMouseMove(event) {
+      if (!isDragging) return;
+      endX = event.clientX;
+    }
+
+    function handleMouseUp() {
+      isDragging = false;
+      // Reset the cursor style to "grab" when the drag ends
+      images.forEach((image) => {
+        image.style.cursor = "grab";
+      });
+
+      if (isTransitioning) return; // Prevent double swipe during transition
+
+      const mouseDiff = endX - startX;
+
+      if (mouseDiff > 0) {
+        handleLeftArrowClick();
+      } else if (mouseDiff < 0) {
+        handleRightArrowClick();
       }
+
+      if (autoplay && resetOnInteraction) {
+        resetAutoplay(); // Add resetAutoplay function call
+      }
+    }
+
+    if (carousel) {
+      carousel.addEventListener("mousedown", handleMouseDown, false);
+      carousel.addEventListener("mousemove", handleMouseMove, false);
+      carousel.addEventListener("mouseup", handleMouseUp, false);
     }
   }
 
   // Touch swipe
-  if (touchSwipe) {
-    let touchStartX = 0;
-    let touchEndX = 0;
+  function addSwipeFunctionality() {
+    let isDragging = false;
+    let startX = 0;
+    let endX = 0;
 
     function handleTouchStart(event) {
-      touchStartX = event.touches[0].clientX;
+      isDragging = true;
+      startX = event.touches[0].clientX;
     }
 
     function handleTouchMove(event) {
-      touchEndX = event.touches[0].clientX;
+      if (!isDragging) return;
+      endX = event.touches[0].clientX;
     }
 
     function handleTouchEnd() {
+      isDragging = false;
       if (isTransitioning) return; // Prevent double swipe during transition
 
-      const touchDiff = touchEndX - touchStartX;
+      const touchDiff = endX - startX;
 
       if (touchDiff > 0) {
         handleLeftArrowClick();
@@ -203,15 +256,26 @@ function createCarousel(
         handleRightArrowClick();
       }
 
-      if (autoplay) {
+      if (autoplay && resetOnInteraction) {
         resetAutoplay(); // Add resetAutoplay function call
       }
     }
+
     if (carousel) {
       carousel.addEventListener("touchstart", handleTouchStart, false);
       carousel.addEventListener("touchmove", handleTouchMove, false);
       carousel.addEventListener("touchend", handleTouchEnd, false);
     }
+  }
+
+  // Add drag functionality if enabled
+  if (mouseDrag) {
+    addDragFunctionality();
+  }
+
+  // Add swipe functionality if enabled
+  if (touchSwipe) {
+    addSwipeFunctionality();
   }
 
   // Keyboard controls
@@ -220,7 +284,7 @@ function createCarousel(
       if (isTransitioning) return; // Prevent double keydown during transition
 
       handleKeyDown(event);
-      if (autoplay) {
+      if (autoplay && resetOnInteraction) {
         resetAutoplay(); // Add resetAutoplay function call
       }
     });
@@ -266,13 +330,5 @@ function createCarousel(
 
   if (autoplay) {
     startAutoplay();
-  }
-
-  //reset on Interaction
-  if (resetOnInteraction) {
-    const carouselItems = carousel.querySelectorAll(slideSelector, ".dot");
-    carouselItems.forEach((item) => {
-      item.addEventListener("click", resetAutoplay);
-    });
   }
 }
