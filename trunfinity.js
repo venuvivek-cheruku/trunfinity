@@ -28,9 +28,9 @@ function createCarousel(
   const {
     endless = false,
     autoplay = false,
-    arrowButtonsControls = false,
+    arrowButtons = false,
     touchSwipe = false,
-    keyboardControls = false,
+    keyboardKeys = false,
     autoplaySpeed = 3000,
     cursorArrows = false,
     mouseDrag = false,
@@ -341,9 +341,34 @@ function createCarousel(
     }
   }
 
+  // Keyboard controls
+  function addKeyboardKeys() {
+    document.addEventListener("keydown", (event) => {
+      if (isTransitioning) return; // Prevent double keydown during transition
+
+      handleKeyDown(event);
+      if (autoplay && resetOnInteraction) {
+        resetAutoplay(); // Add resetAutoplay function call
+      }
+    });
+
+    function handleKeyDown(event) {
+      if (event.key === "ArrowLeft") {
+        handleLeftArrowClick();
+      } else if (event.key === "ArrowRight") {
+        handleRightArrowClick();
+      }
+    }
+  }
+
   // Arrow Keys functionality
-  if (arrowButtonsControls) {
+  if (arrowButtons) {
     addArrowKeyButtons();
+  }
+
+  // Keyboard Keys functionality
+  if (keyboardKeys) {
+    addKeyboardKeys();
   }
 
   // drag functionality
@@ -364,26 +389,6 @@ function createCarousel(
   // hoverSwipe functionality
   if (hoverSwipe) {
     addHoverSwipe();
-  }
-
-  // Keyboard controls
-  if (keyboardControls) {
-    document.addEventListener("keydown", (event) => {
-      if (isTransitioning) return; // Prevent double keydown during transition
-
-      handleKeyDown(event);
-      if (autoplay && resetOnInteraction) {
-        resetAutoplay(); // Add resetAutoplay function call
-      }
-    });
-
-    function handleKeyDown(event) {
-      if (event.key === "ArrowLeft") {
-        handleLeftArrowClick();
-      } else if (event.key === "ArrowRight") {
-        handleRightArrowClick();
-      }
-    }
   }
 
   function resetAutoplay() {
