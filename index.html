@@ -17,6 +17,7 @@
     <section id="slider-one">
       <div class="inner-container">
         <h1>Carousel One</h1>
+        <p>(with arrows, keyboard control, touch swipe and drag )</p>
         <div class="slider-main-container">
           <div id="left" class="slider-arrow slider-one--arrow-left">
             <i class="fa fa-arrow-alt-circle-left"></i>
@@ -150,92 +151,10 @@
           autoplaySpeed: 5000,
           arrowButtonsControls: true,
           touchSwipe: true,
-          mouseDrag: false,
+          mouseDrag: true,
           keyboardControls: true,
-          dynamicDots: false,
+          dynamicDots: true,
           autoplayPauseOnHover: false,
-          resetOnInteraction: true,
-        }
-      );
-
-      // Slider Two
-
-      createCarousel(
-        ".slider-two--slider",
-        ".slider-two--slide",
-        ".slider-two--arrow-left",
-        ".slider-two--arrow-right",
-        {
-          endless: true,
-          autoplay: true,
-          autoplaySpeed: 5000,
-          arrowButtonsControls: true,
-          mouseDrag: true,
-          touchSwipe: false,
-          keyboardControls: true,
-          dynamicDots: true,
-          autoplayPauseOnHover: true,
-          resetOnInteraction: true,
-        }
-      );
-
-      // Slider Three
-
-      createCarousel(
-        ".slider-three--slider",
-        ".slider-three--slide",
-        ".slider-three--arrow-left",
-        ".slider-three--arrow-right",
-        {
-          endless: true,
-          autoplay: true,
-          autoplaySpeed: 5000,
-          mouseDrag: true,
-          arrowButtonsControls: true,
-          touchSwipe: true,
-          keyboardControls: true,
-          dynamicDots: true,
-          autoplayPauseOnHover: true,
-          resetOnInteraction: false,
-        }
-      );
-      // Slider four
-
-      createCarousel(
-        ".slider-four--slider",
-        ".slider-four--slide",
-        ".slider-four--arrow-left",
-        ".slider-four--arrow-right",
-        {
-          endless: false,
-          autoplay: false,
-          autoplaySpeed: 5000,
-          mouseDrag: true,
-          arrowButtonsControls: false,
-          touchSwipe: true,
-          keyboardControls: true,
-          dynamicDots: false,
-          autoplayPauseOnHover: true,
-          resetOnInteraction: true,
-        }
-      );
-      // Slider five
-
-      createCarousel(
-        ".slider-five--slider",
-        ".slider-five--slide",
-        ".slider-five--arrow-left",
-        ".slider-five--arrow-right",
-        {
-          endless: true,
-          autoplay: true,
-          autoplaySpeed: 15000,
-          mouseDrag: true,
-          arrowButtonsControls: true,
-          touchSwipe: true,
-          keyboardControls: true,
-          dynamicDots: true,
-          autoplayPauseOnHover: true,
           resetOnInteraction: true,
         }
       );

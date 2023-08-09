@@ -10,6 +10,7 @@ function createCarousel(
   let currentIndex = 0;
   let prevIndex;
   let isTransitioning = false; // Flag to track transition state
+  let dotsContainer;
 
   let totalImages = images.length;
 
@@ -17,8 +18,6 @@ function createCarousel(
 
   // Extract the value of the 'gap' property from the computed style
   let imageGap = parseFloat(carouselStyles.gap);
-
-  console.log(imageGap);
 
   /// Set up options (including the new option for dynamic dots)
   const {
@@ -51,6 +50,10 @@ function createCarousel(
   }
 
   function handleLeftArrowClick() {
+    if (!endless && currentIndex === 0) {
+      return;
+    }
+
     if (totalImages <= 1 || isTransitioning) return; // Prevent double click during transition
     isTransitioning = true;
 
@@ -62,6 +65,7 @@ function createCarousel(
 
     if (carousel) {
       carousel.style.transform = `translateX(-${totalWidth}px)`;
+
       carousel.insertBefore(images[currentIndex], carousel.firstChild);
     }
     setTimeout(() => {
@@ -78,6 +82,10 @@ function createCarousel(
   }
 
   function handleRightArrowClick() {
+    if (!endless && currentIndex + currentIndex + 1 == totalImages) {
+      return;
+    }
+
     if (totalImages <= 1 || isTransitioning) return; // Prevent double click during transition
     isTransitioning = true;
 
@@ -85,11 +93,12 @@ function createCarousel(
     currentIndex = (currentIndex + 1) % totalImages;
 
     if (carousel) {
-      console.log(prevIndex);
       const imageWidth = images[prevIndex].offsetWidth;
       const totalWidth = imageWidth + imageGap;
-      carousel.style.transition = "transform 0.5s ease-in-out";
+
       carousel.style.transform = `translateX(-${totalWidth}px)`;
+      carousel.style.transition = "transform 0.5s ease-in-out";
+
       setTimeout(() => {
         carousel.appendChild(images[prevIndex]);
         carousel.style.transition = "none";
@@ -103,7 +112,6 @@ function createCarousel(
   }
 
   // Create and update dynamic dots
-  let dotsContainer;
 
   if (dynamicDots) {
     dotsContainer = document.createElement("div");

@@ -24,6 +24,11 @@ section h1 {
   text-align: center;
 }
 
+section p {
+  font-size: 20px;
+  text-align: center;
+}
+
 .slider-main-container {
   position: relative;
   padding: 0rem 2rem;
@@ -65,10 +70,10 @@ section h1 {
   transform: translateY(-50%);
 }
 .slider-arrow#left {
-  left: -5%;
+  left: -1%;
 }
 .slider-arrow#right {
-  right: -5%;
+  right: -1%;
 }
 
 .slider-arrow i {
