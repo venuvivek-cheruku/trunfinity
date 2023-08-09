@@ -17,7 +17,11 @@ function createCarousel(
 
   if (carousel) {
     carouselStyles = window.getComputedStyle(carousel);
-    imageGap = parseFloat(carouselStyles.gap);
+    if (parseFloat(carouselStyles.gap) > 0) {
+      imageGap = parseFloat(carouselStyles.gap);
+    } else {
+      imageGap = 0;
+    }
   }
 
   //Set up options
@@ -306,9 +310,13 @@ function createCarousel(
     }
 
     if (carousel) {
-      carousel.addEventListener("touchstart", handleTouchStart, false);
-      carousel.addEventListener("touchmove", handleTouchMove, false);
-      carousel.addEventListener("touchend", handleTouchEnd, false);
+      carousel.addEventListener("touchstart", handleTouchStart, {
+        passive: true,
+      });
+      carousel.addEventListener("touchmove", handleTouchMove, {
+        passive: true,
+      });
+      carousel.addEventListener("touchend", handleTouchEnd, { passive: true });
     }
   }
 
