@@ -138,3 +138,15 @@ section p {
     text-align: center;
   }
 }
+
+.cursor-prev {
+  cursor: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/162656/cursor-prev.svg)
+      16 16,
+    move;
+}
+
+.cursor-next {
+  cursor: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/162656/cursor-next.svg)
+      16 16,
+    auto;
+}

@@ -11,15 +11,16 @@ function createCarousel(
   let prevIndex;
   let isTransitioning = false; // Flag to track transition state
   let dotsContainer;
-
+  let carouselStyles;
+  let imageGap;
   let totalImages = images.length;
 
-  const carouselStyles = window.getComputedStyle(carousel);
+  if (carousel) {
+    carouselStyles = window.getComputedStyle(carousel);
+    imageGap = parseFloat(carouselStyles.gap);
+  }
 
-  // Extract the value of the 'gap' property from the computed style
-  let imageGap = parseFloat(carouselStyles.gap);
-
-  /// Set up options (including the new option for dynamic dots)
+  //Set up options
   const {
     endless = false,
     autoplay = false,
@@ -27,21 +28,20 @@ function createCarousel(
     touchSwipe = false,
     keyboardControls = false,
     autoplaySpeed = 3000,
+    cursorArrows = false,
     mouseDrag = false,
+    hoverSwipe = false,
     dynamicDots = false,
     autoplayPauseOnHover = false,
     resetOnInteraction = true,
   } = options;
 
   if (endless && totalImages > 1) {
-    // Duplicate the logos to create a seamless loop
     images.forEach((logo, index) => {
       const clone = logo.cloneNode(true);
       carousel.appendChild(clone);
-      images.push(clone); // Add the cloned slide to the 'images' array
-
-      totalImages = images.length; // Update the totalSlides count
-      // Add class names to differentiate original and cloned images
+      images.push(clone);
+      totalImages = images.length;
       logo.classList.add("original-slide");
       clone.classList.add("cloned-slide");
     });
@@ -159,7 +159,7 @@ function createCarousel(
 
       let targetIndex = currentIndex % (totalImages / 2); // Use modulo to get index within non-cloned slides
 
-      if (targetIndex < 0) {
+      if (targetIndex < 0 && !endless) {
         targetIndex += totalImages / 2; // Adjust negative index
       }
 
@@ -168,28 +168,8 @@ function createCarousel(
     }
   }
 
-  // Arrow Keys
-  if (arrowButtonsControls) {
-    const leftArrow = document.querySelector(prevBtn);
-    const rightArrow = document.querySelector(nextBtn);
-    if (leftArrow && rightArrow) {
-      leftArrow.addEventListener("click", () => {
-        handleLeftArrowClick();
-        if (autoplay && resetOnInteraction) {
-          resetAutoplay(); // Add resetAutoplay function call
-        }
-      });
-      rightArrow.addEventListener("click", () => {
-        handleRightArrowClick();
-        if (autoplay && resetOnInteraction) {
-          resetAutoplay(); // Add resetAutoplay function call
-        }
-      });
-    }
-  }
-
   // Drag swipe
-  function addDragFunctionality() {
+  function addDragSwipe() {
     let isDragging = false;
     let startX = 0;
     let endX = 0;
@@ -199,6 +179,7 @@ function createCarousel(
       startX = event.clientX;
       images.forEach((image) => {
         image.style.cursor = "grabbing";
+        image.style.userSelect = "none";
       });
     }
 
@@ -236,8 +217,63 @@ function createCarousel(
     }
   }
 
+  //onHover arrows
+  function addHoverSwipe() {
+    const getCarouselWidth = carousel.getBoundingClientRect();
+    const halfCarouselWidth = getCarouselWidth.width / 2;
+
+    carousel.addEventListener("mousemove", function (e) {
+      const xPos = e.pageX - carousel.offsetLeft;
+      this.classList.remove("cursor-prev", "cursor-next");
+      if (xPos > halfCarouselWidth) {
+        this.classList.add("cursor-next");
+        handleRightArrowClick();
+        if (autoplay && resetOnInteraction) {
+          resetAutoplay(); // Add resetAutoplay function call
+        }
+      } else {
+        this.classList.add("cursor-prev");
+        handleLeftArrowClick();
+        if (autoplay && resetOnInteraction) {
+          resetAutoplay(); // Add resetAutoplay function call
+        }
+      }
+    });
+  }
+
+  //Click Cursor Arrows
+  function addCursorArrows() {
+    if (carousel) {
+      const getCarouselWidth = carousel.getBoundingClientRect();
+      const halfCarouselWidth = getCarouselWidth.width / 2;
+      let activeEventListener = null;
+      carousel.addEventListener("mousemove", function (e) {
+        const xPos = e.pageX - carousel.offsetLeft;
+        this.classList.remove("cursor-prev", "cursor-next");
+
+        if (activeEventListener) {
+          carousel.removeEventListener("click", activeEventListener, false);
+        }
+
+        if (xPos > halfCarouselWidth) {
+          this.classList.add("cursor-next");
+          activeEventListener = handleRightArrowClick;
+        } else {
+          this.classList.add("cursor-prev");
+          activeEventListener = handleLeftArrowClick;
+        }
+
+        carousel.addEventListener("click", activeEventListener, false);
+
+        if (autoplay && resetOnInteraction) {
+          resetAutoplay();
+        }
+      });
+    }
+  }
+
   // Touch swipe
-  function addSwipeFunctionality() {
+  function addTouchSwipe() {
     let isDragging = false;
     let startX = 0;
     let endX = 0;
@@ -276,14 +312,50 @@ function createCarousel(
     }
   }
 
-  // Add drag functionality if enabled
-  if (mouseDrag) {
-    addDragFunctionality();
+  // Arrow Keys functionality
+
+  function addArrowKeyButtons() {
+    const leftArrow = document.querySelector(prevBtn);
+    const rightArrow = document.querySelector(nextBtn);
+    if (leftArrow && rightArrow) {
+      leftArrow.addEventListener("click", () => {
+        handleLeftArrowClick();
+        if (autoplay && resetOnInteraction) {
+          resetAutoplay(); // Add resetAutoplay function call
+        }
+      });
+      rightArrow.addEventListener("click", () => {
+        handleRightArrowClick();
+        if (autoplay && resetOnInteraction) {
+          resetAutoplay(); // Add resetAutoplay function call
+        }
+      });
+    }
   }
 
-  // Add swipe functionality if enabled
+  // Arrow Keys functionality
+  if (arrowButtonsControls) {
+    addArrowKeyButtons();
+  }
+
+  // drag functionality
+  if (mouseDrag) {
+    addDragSwipe();
+  }
+
+  // swipe functionality
   if (touchSwipe) {
-    addSwipeFunctionality();
+    addTouchSwipe();
+  }
+
+  // cursorArrows functionality
+  if (cursorArrows) {
+    addCursorArrows();
+  }
+
+  // hoverSwipe functionality
+  if (hoverSwipe) {
+    addHoverSwipe();
   }
 
   // Keyboard controls
