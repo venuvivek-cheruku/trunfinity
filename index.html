@@ -139,6 +139,52 @@
       </div>
     </section>
 
+    <!-- Sample Slider six -->
+
+    <section id="slider-six">
+      <div class="inner-container">
+        <h1>Carousel Six Vertical</h1>
+        <div class="slider-main-container">
+          <div
+            id="left"
+            class="slider-arrow slider-arrow-vertical slider-six--arrow-left">
+            <i class="fa fa-arrow-alt-circle-left"></i>
+          </div>
+          <div
+            class="slider-container slider-container-vertical slider-six--slider-container">
+            <div class="slider slider-vertical slider-six--slider">
+              <div class="slide slide-vertical slider-six--slide slide-var">
+                Slide One
+              </div>
+              <div class="slide slide-vertical slider-six--slide">
+                Slide Two
+              </div>
+              <div class="slide slide-vertical slider-six--slide">
+                Slide Three
+              </div>
+              <div class="slide slide-vertical slider-six--slide slide-var">
+                Slide Four
+              </div>
+              <div class="slide slide-vertical slider-six--slide">
+                Slide Five
+              </div>
+              <div class="slide slide-vertical slider-six--slide slide-var">
+                Slide Six
+              </div>
+              <div class="slide slide-vertical slider-six--slide">
+                Slide Seven
+              </div>
+            </div>
+          </div>
+          <div
+            id="right"
+            class="slider-arrow slider-arrow-vertical slider-six--arrow-right">
+            <i class="fa fa-arrow-alt-circle-right"></i>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <script src="./trunfinity.js"></script>
     <script>
       //Slider One
@@ -148,6 +194,29 @@
         ".slider-one--slide",
         ".slider-one--arrow-left",
         ".slider-one--arrow-right",
+        {
+          endless: false,
+          autoplay: true,
+          autoplaySpeed: 8000,
+          arrowButtons: true,
+          touchSwipe: true,
+          mouseDrag: false,
+          hoverSwipe: false,
+          cursorArrows: false,
+          keyboardKeys: true,
+          dynamicDots: false,
+          autoplayPauseOnHover: false,
+          resetOnInteraction: true,
+          sliderVertical: false,
+        }
+      );
+      //Slider six
+
+      createCarousel(
+        ".slider-six--slider",
+        ".slider-six--slide",
+        ".slider-six--arrow-left",
+        ".slider-six--arrow-right",
         {
           endless: true,
           autoplay: true,
@@ -161,6 +230,7 @@
           dynamicDots: false,
           autoplayPauseOnHover: false,
           resetOnInteraction: true,
+          sliderVertical: true,
         }
       );
     </script>

@@ -38,6 +38,7 @@ function createCarousel(
     dynamicDots = false,
     autoplayPauseOnHover = false,
     resetOnInteraction = true,
+    sliderVertical = false,
   } = options;
 
   if (endless && totalImages > 1) {
@@ -68,8 +69,13 @@ function createCarousel(
     const totalWidth = imageWidth + imageGap;
 
     if (carousel) {
-      carousel.style.transform = `translateX(-${totalWidth}px)`;
-
+      if (sliderVertical) {
+        const imageHeight = images[currentIndex].offsetHeight;
+        const totalHeight = imageHeight + imageGap;
+        carousel.style.transform = `translateY(-${totalHeight}px)`;
+      } else {
+        carousel.style.transform = `translateX(-${totalWidth}px)`;
+      }
       carousel.insertBefore(images[currentIndex], carousel.firstChild);
     }
     setTimeout(() => {
@@ -99,8 +105,13 @@ function createCarousel(
     if (carousel) {
       const imageWidth = images[prevIndex].offsetWidth;
       const totalWidth = imageWidth + imageGap;
-
-      carousel.style.transform = `translateX(-${totalWidth}px)`;
+      if (sliderVertical) {
+        const imageHeight = images[prevIndex].offsetHeight;
+        const totalHeight = imageHeight + imageGap;
+        carousel.style.transform = `translateY(-${totalHeight}px)`;
+      } else {
+        carousel.style.transform = `translateX(-${totalWidth}px)`;
+      }
       carousel.style.transition = "transform 0.5s ease-in-out";
 
       setTimeout(() => {
