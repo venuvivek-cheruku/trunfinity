@@ -305,7 +305,7 @@ function createCarousel(
       }
 
       if (autoplay && resetOnInteraction) {
-        resetAutoplay(); // Add resetAutoplay function call
+        resetAutoplay(); //  resetAutoplay
       }
     }
 
