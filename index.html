@@ -13,6 +13,15 @@
     <title>Sample</title>
   </head>
   <body>
+    <section id="introduction">
+      <h1>Your Ultimate Carousel Solution</h1>
+      <p>
+        Experience the cutting-edge features and flexibility of the Turnifinity
+        carousel library. Explore the sections below to see how Turnifinity can
+        enhance your web projects.
+      </p>
+    </section>
+
     <!-- Sample Slider one -->
     <section id="slider-one">
       <div class="inner-container">
@@ -149,7 +158,7 @@
         ".slider-one--arrow-left",
         ".slider-one--arrow-right",
         {
-          endless: true,
+          endless: false,
           autoplay: true,
           autoplaySpeed: 5000,
           arrowButtons: true,
@@ -159,6 +168,28 @@
           cursorArrows: false,
           keyboardKeys: true,
           dynamicDots: false,
+          autoplayPauseOnHover: false,
+          resetOnInteraction: true,
+        }
+      );
+      //Slider two
+
+      createCarousel(
+        ".slider-four--slider",
+        ".slider-four--slide",
+        ".slider-four--arrow-left",
+        ".slider-four--arrow-right",
+        {
+          endless: true,
+          autoplay: true,
+          autoplaySpeed: 5000,
+          arrowButtons: true,
+          touchSwipe: true,
+          mouseDrag: false,
+          hoverSwipe: false,
+          cursorArrows: false,
+          keyboardKeys: true,
+          dynamicDots: true,
           autoplayPauseOnHover: false,
           resetOnInteraction: true,
         }

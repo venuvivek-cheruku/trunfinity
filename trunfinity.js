@@ -28,16 +28,16 @@ function createCarousel(
   const {
     endless = false,
     autoplay = false,
+    autoplaySpeed = 5000,
     arrowButtons = false,
     touchSwipe = false,
-    keyboardKeys = false,
-    autoplaySpeed = 3000,
-    cursorArrows = false,
     mouseDrag = false,
     hoverSwipe = false,
+    cursorArrows = false,
+    keyboardKeys = false,
     dynamicDots = false,
     autoplayPauseOnHover = false,
-    resetOnInteraction = true,
+    resetOnInteraction = false,
   } = options;
 
   if (endless && totalImages > 1) {
@@ -283,17 +283,32 @@ function createCarousel(
     let endX = 0;
 
     function handleTouchStart(event) {
-      isDragging = true;
+      isDragging = false; // Reset isDragging to false on touch start
       startX = event.touches[0].clientX;
     }
 
     function handleTouchMove(event) {
-      if (!isDragging) return;
-      endX = event.touches[0].clientX;
+      if (!isDragging) {
+        const touchDiff = Math.abs(event.touches[0].clientX - startX);
+        if (touchDiff > 10) {
+          // Adjust the threshold to differentiate between swipe and tap
+          isDragging = true;
+        }
+      }
+
+      if (isDragging) {
+        endX = event.touches[0].clientX;
+      }
     }
 
     function handleTouchEnd() {
+      if (!isDragging) {
+        // Handle tap/click action here if needed
+        return;
+      }
+
       isDragging = false;
+
       if (isTransitioning) return; // Prevent double swipe during transition
 
       const touchDiff = endX - startX;
