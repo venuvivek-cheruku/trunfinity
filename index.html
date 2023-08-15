@@ -210,6 +210,49 @@
           sliderVertical: false,
         }
       );
+
+      createCarousel(
+        ".slider-two--slider",
+        ".slider-two--slide",
+        ".slider-two--arrow-left",
+        ".slider-two--arrow-right",
+        {
+          endless: true,
+          autoplay: true,
+          autoplaySpeed: 8000,
+          arrowButtons: true,
+          touchSwipe: false,
+          mouseDrag: true,
+          hoverSwipe: false,
+          cursorArrows: false,
+          keyboardKeys: true,
+          dynamicDots: false,
+          autoplayPauseOnHover: false,
+          resetOnInteraction: true,
+          sliderVertical: false,
+        }
+      );
+      createCarousel(
+        ".slider-three--slider",
+        ".slider-three--slide",
+        ".slider-three--arrow-left",
+        ".slider-three--arrow-right",
+        {
+          endless: false,
+          autoplay: true,
+          autoplaySpeed: 8000,
+          arrowButtons: true,
+          touchSwipe: true,
+          mouseDrag: false,
+          hoverSwipe: true,
+          cursorArrows: false,
+          keyboardKeys: true,
+          dynamicDots: false,
+          autoplayPauseOnHover: false,
+          resetOnInteraction: true,
+          sliderVertical: false,
+        }
+      );
       //Slider six
 
       createCarousel(
@@ -218,7 +261,7 @@
         ".slider-six--arrow-left",
         ".slider-six--arrow-right",
         {
-          endless: true,
+          endless: false,
           autoplay: true,
           autoplaySpeed: 8000,
           arrowButtons: true,

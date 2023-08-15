@@ -68,6 +68,7 @@ section p {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
+  cursor: pointer;
 }
 .slider-arrow#left {
   left: -1%;
@@ -94,6 +95,7 @@ section p {
   border-radius: 100%;
   background-color: #a2a2a2;
   transition: background-color 0.3s ease-in-out;
+  cursor: pointer;
 }
 
 .dot.active-dot {
