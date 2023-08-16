@@ -7,6 +7,8 @@ function createCarousel(
 ) {
   const carousel = document.querySelector(containerSelector);
   const images = Array.from(document.querySelectorAll(slideSelector));
+  const leftArrow = document.querySelector(prevBtn);
+  const rightArrow = document.querySelector(nextBtn);
   let currentIndex = 0;
   let prevIndex;
   let isTransitioning = false; // Flag to track transition state
@@ -28,16 +30,17 @@ function createCarousel(
   const {
     endless = false,
     autoplay = false,
-    autoplaySpeed = 5000,
     arrowButtons = false,
     touchSwipe = false,
+    keyboardKeys = false,
+    autoplaySpeed = 3000,
+    cursorArrows = false,
     mouseDrag = false,
     hoverSwipe = false,
-    cursorArrows = false,
-    keyboardKeys = false,
     dynamicDots = false,
     autoplayPauseOnHover = false,
-    resetOnInteraction = false,
+    resetOnInteraction = true,
+    sliderVertical = false,
   } = options;
 
   if (endless && totalImages > 1) {
@@ -55,7 +58,17 @@ function createCarousel(
 
   function handleLeftArrowClick() {
     if (!endless && currentIndex === 0) {
+      if (arrowButtons && leftArrow !== null && rightArrow !== null) {
+        rightArrow.style.opacity = 1;
+        rightArrow.style.cursor = "pointer";
+        leftArrow.style.opacity = 0.5;
+        leftArrow.style.cursor = "not-allowed";
+      }
       return;
+    }
+    if (arrowButtons && leftArrow !== null && rightArrow !== null) {
+      rightArrow.style.opacity = 1;
+      rightArrow.style.cursor = "pointer";
     }
 
     if (totalImages <= 1 || isTransitioning) return; // Prevent double click during transition
@@ -68,8 +81,13 @@ function createCarousel(
     const totalWidth = imageWidth + imageGap;
 
     if (carousel) {
-      carousel.style.transform = `translateX(-${totalWidth}px)`;
-
+      if (sliderVertical) {
+        const imageHeight = images[currentIndex].offsetHeight;
+        const totalHeight = imageHeight + imageGap;
+        carousel.style.transform = `translateY(-${totalHeight}px)`;
+      } else {
+        carousel.style.transform = `translateX(-${totalWidth}px)`;
+      }
       carousel.insertBefore(images[currentIndex], carousel.firstChild);
     }
     setTimeout(() => {
@@ -87,7 +105,17 @@ function createCarousel(
 
   function handleRightArrowClick() {
     if (!endless && currentIndex + currentIndex + 1 == totalImages) {
+      if (arrowButtons && leftArrow !== null && rightArrow !== null) {
+        leftArrow.style.opacity = 1;
+        leftArrow.style.cursor = "pointer";
+        rightArrow.style.opacity = 0.5;
+        rightArrow.style.cursor = "not-allowed";
+      }
       return;
+    }
+    if (arrowButtons && leftArrow !== null && rightArrow !== null) {
+      leftArrow.style.opacity = 1;
+      leftArrow.style.cursor = "pointer";
     }
 
     if (totalImages <= 1 || isTransitioning) return; // Prevent double click during transition
@@ -99,8 +127,13 @@ function createCarousel(
     if (carousel) {
       const imageWidth = images[prevIndex].offsetWidth;
       const totalWidth = imageWidth + imageGap;
-
-      carousel.style.transform = `translateX(-${totalWidth}px)`;
+      if (sliderVertical) {
+        const imageHeight = images[prevIndex].offsetHeight;
+        const totalHeight = imageHeight + imageGap;
+        carousel.style.transform = `translateY(-${totalHeight}px)`;
+      } else {
+        carousel.style.transform = `translateX(-${totalWidth}px)`;
+      }
       carousel.style.transition = "transform 0.5s ease-in-out";
 
       setTimeout(() => {
@@ -179,7 +212,7 @@ function createCarousel(
     let endX = 0;
 
     function handleMouseDown(event) {
-      isDragging = true;
+      isDragging = false; // Reset isDragging to false on touch start
       startX = event.clientX;
       images.forEach((image) => {
         image.style.cursor = "grabbing";
@@ -188,24 +221,78 @@ function createCarousel(
     }
 
     function handleMouseMove(event) {
-      if (!isDragging) return;
-      endX = event.clientX;
+      if (!isDragging) {
+        const diff = Math.abs(event.clientX - startX);
+        if (diff > 10) {
+          isDragging = true;
+        }
+      }
+      if (isDragging) {
+        endX = event.clientX;
+      }
     }
 
     function handleMouseUp() {
+      if (!isDragging) {
+        return;
+      }
+
       isDragging = false;
-      // Reset the cursor style to "grab" when the drag ends
       images.forEach((image) => {
         image.style.cursor = "grab";
       });
 
       if (isTransitioning) return; // Prevent double swipe during transition
 
-      const mouseDiff = endX - startX;
+      const diff = endX - startX;
 
-      if (mouseDiff > 0) {
+      if (diff > 0) {
         handleLeftArrowClick();
-      } else if (mouseDiff < 0) {
+      } else if (diff < 0) {
+        handleRightArrowClick();
+      }
+
+      if (autoplay && resetOnInteraction) {
+        resetAutoplay(); // Add resetAutoplay function call
+      }
+    }
+
+    //touchDrag
+
+    function handleTouchStart(event) {
+      isDragging = false; // Reset isDragging to false on touch start
+      startX = event.touches[0].clientX;
+    }
+
+    function handleTouchMove(event) {
+      if (!isDragging) {
+        const touchDiff = Math.abs(event.touches[0].clientX - startX);
+        if (touchDiff > 10) {
+          // Adjust the threshold to differentiate between swipe and tap
+          isDragging = true;
+        }
+      }
+
+      if (isDragging) {
+        endX = event.touches[0].clientX;
+      }
+    }
+
+    function handleTouchEnd() {
+      if (!isDragging) {
+        // Handle tap/click action here if needed
+        return;
+      }
+
+      isDragging = false;
+
+      if (isTransitioning) return; // Prevent double swipe during transition
+
+      const touchDiff = endX - startX;
+
+      if (touchDiff > 0) {
+        handleLeftArrowClick();
+      } else if (touchDiff < 0) {
         handleRightArrowClick();
       }
 
@@ -215,9 +302,21 @@ function createCarousel(
     }
 
     if (carousel) {
-      carousel.addEventListener("mousedown", handleMouseDown, false);
-      carousel.addEventListener("mousemove", handleMouseMove, false);
-      carousel.addEventListener("mouseup", handleMouseUp, false);
+      carousel.addEventListener("mousedown", handleMouseDown, {
+        passive: true,
+      });
+      carousel.addEventListener("mousemove", handleMouseMove, {
+        passive: true,
+      });
+      carousel.addEventListener("mouseup", handleMouseUp, { passive: true });
+
+      carousel.addEventListener("touchstart", handleTouchStart, {
+        passive: true,
+      });
+      carousel.addEventListener("touchmove", handleTouchMove, {
+        passive: true,
+      });
+      carousel.addEventListener("touchend", handleTouchEnd, { passive: true });
     }
   }
 
@@ -338,8 +437,6 @@ function createCarousel(
   // Arrow Keys functionality
 
   function addArrowKeyButtons() {
-    const leftArrow = document.querySelector(prevBtn);
-    const rightArrow = document.querySelector(nextBtn);
     if (leftArrow && rightArrow) {
       leftArrow.addEventListener("click", () => {
         handleLeftArrowClick();
