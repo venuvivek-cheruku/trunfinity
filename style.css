@@ -68,6 +68,7 @@ section p {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
+  cursor: pointer;
 }
 .slider-arrow#left {
   left: -1%;
@@ -94,6 +95,7 @@ section p {
   border-radius: 100%;
   background-color: #a2a2a2;
   transition: background-color 0.3s ease-in-out;
+  cursor: pointer;
 }
 
 .dot.active-dot {
@@ -149,4 +151,31 @@ section p {
   cursor: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/162656/cursor-next.svg)
       16 16,
     auto;
+}
+
+/* slider( vertical) styles  */
+
+.slider-container.slider-container-vertical {
+  max-height: 600px;
+  overflow: hidden;
+}
+
+.slider.slider-vertical {
+  flex-direction: column;
+}
+.slide.slide-vertical {
+  width: 80%;
+}
+
+.slider-arrow.slider-arrow-vertical {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%) rotate(-90deg);
+}
+.slider-arrow.slider-arrow-vertical#left {
+  left: calc(100% - 28px);
+  top: 60%;
+}
+.slider-arrow.slider-arrow-vertical#right {
+  right: 0px;
 }
