@@ -214,9 +214,19 @@ function createCarousel(
     function handleMouseDown(event) {
       isDragging = false; // Reset isDragging to false on touch start
       startX = event.clientX;
-      images.forEach((image) => {
-        image.style.cursor = "grabbing";
-        image.style.userSelect = "none";
+      images.forEach((slide) => {
+        const imageElements = slide.querySelectorAll("img");
+        if (imageElements.length > 0) {
+          imageElements.forEach((imageElement) => {
+            if (imageElement) {
+              imageElement.style.pointerEvents = "none";
+              imageElement.style.userSelect = "none";
+            }
+          });
+        } else {
+          slide.style.userSelect = "none";
+          slide.style.cursor = "grabbing";
+        }
       });
     }
 
@@ -236,10 +246,16 @@ function createCarousel(
       if (!isDragging) {
         return;
       }
-
       isDragging = false;
-      images.forEach((image) => {
-        image.style.cursor = "grab";
+      images.forEach((slide) => {
+        const imageElements = slide.querySelectorAll("img");
+        imageElements.forEach((imageElement) => {
+          if (imageElement) {
+            imageElement.style.pointerEvents = "auto";
+            imageElement.style.userSelect = "default";
+          }
+        });
+        slide.style.cursor = "grab";
       });
 
       if (isTransitioning) return; // Prevent double swipe during transition
@@ -268,7 +284,6 @@ function createCarousel(
       if (!isDragging) {
         const touchDiff = Math.abs(event.touches[0].clientX - startX);
         if (touchDiff > 10) {
-          // Adjust the threshold to differentiate between swipe and tap
           isDragging = true;
         }
       }
