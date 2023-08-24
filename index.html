@@ -72,7 +72,7 @@
     <!-- Sample Slider three -->
     <section id="slider-three">
       <div class="inner-container">
-        <h1>Carousel Three</h1>
+        <h1>Carousel Three (Hover Swipe)</h1>
         <div class="slider-container slider-three--slider-container">
           <div class="slider slider-three--slider">
             <div class="slide slider-three--slide">Slide One</div>
@@ -196,7 +196,7 @@
         ".slider-one--arrow-right",
         {
           endless: false,
-          autoplay: true,
+          autoplay: false,
           autoplaySpeed: 8000,
           arrowButtons: true,
           touchSwipe: true,
@@ -217,14 +217,14 @@
         ".slider-two--arrow-left",
         ".slider-two--arrow-right",
         {
-          endless: true,
-          autoplay: true,
+          endless: false,
+          autoplay: false,
           autoplaySpeed: 8000,
           arrowButtons: true,
           touchSwipe: false,
-          mouseDrag: true,
+          mouseDrag: false,
           hoverSwipe: false,
-          cursorArrows: false,
+          cursorArrows: true,
           keyboardKeys: true,
           dynamicDots: false,
           autoplayPauseOnHover: false,
@@ -238,13 +238,34 @@
         ".slider-three--arrow-left",
         ".slider-three--arrow-right",
         {
-          endless: false,
+          endless: true,
           autoplay: true,
           autoplaySpeed: 8000,
           arrowButtons: true,
           touchSwipe: true,
           mouseDrag: false,
           hoverSwipe: true,
+          cursorArrows: false,
+          keyboardKeys: true,
+          dynamicDots: false,
+          autoplayPauseOnHover: false,
+          resetOnInteraction: true,
+          sliderVertical: false,
+        }
+      );
+      createCarousel(
+        ".slider-four--slider",
+        ".slider-four--slide",
+        ".slider-four--arrow-left",
+        ".slider-four--arrow-right",
+        {
+          endless: true,
+          autoplay: true,
+          autoplaySpeed: 8000,
+          arrowButtons: false,
+          touchSwipe: true,
+          mouseDrag: true,
+          hoverSwipe: false,
           cursorArrows: false,
           keyboardKeys: true,
           dynamicDots: false,
@@ -261,7 +282,7 @@
         ".slider-six--arrow-left",
         ".slider-six--arrow-right",
         {
-          endless: false,
+          endless: true,
           autoplay: true,
           autoplaySpeed: 8000,
           arrowButtons: true,

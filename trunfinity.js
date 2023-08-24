@@ -16,7 +16,7 @@ function createCarousel(
   let carouselStyles;
   let imageGap;
   let totalImages = images.length;
-
+  let isLastSlide = false;
   if (carousel) {
     carouselStyles = window.getComputedStyle(carousel);
     if (parseFloat(carouselStyles.gap) > 0) {
@@ -43,33 +43,77 @@ function createCarousel(
     sliderVertical = false,
   } = options;
 
+  //data attributes
+  images.forEach((slide, index) => {
+    slide.dataset.slideIndex = index; // Store the slide index in a data attribute
+  });
+
   if (endless && totalImages > 1) {
-    images.forEach((logo, index) => {
-      const clone = logo.cloneNode(true);
+    images.forEach((slide, index) => {
+      const clone = slide.cloneNode(true);
       carousel.appendChild(clone);
       images.push(clone);
       totalImages = images.length;
-      logo.classList.add("original-slide");
-      clone.classList.add("cloned-slide");
     });
 
     prevIndex = currentIndex = 0;
   }
 
-  function handleLeftArrowClick() {
-    if (!endless && currentIndex === 0) {
-      if (arrowButtons && leftArrow !== null && rightArrow !== null) {
-        rightArrow.style.opacity = 1;
-        rightArrow.style.cursor = "pointer";
+  function updateArrowButtons() {
+    if (arrowButtons && (leftArrow || rightArrow)) {
+      if (currentIndex === 0 && !endless) {
         leftArrow.style.opacity = 0.5;
         leftArrow.style.cursor = "not-allowed";
+      } else {
+        leftArrow.style.opacity = 1;
+        leftArrow.style.cursor = "pointer";
       }
+
+      if (isLastSlide && !endless) {
+        rightArrow.style.opacity = 0.5;
+        rightArrow.style.cursor = "not-allowed";
+      } else {
+        rightArrow.style.opacity = 1;
+        rightArrow.style.cursor = "pointer";
+      }
+    }
+  }
+
+  function isLastSlideFullyVisible() {
+    if (!carousel || !images || images.length === 0) {
+      return false;
+    }
+
+    const lastSlideIndex = images.length - 1;
+    const lastSlide = images[lastSlideIndex];
+
+    const containerRect = carousel.getBoundingClientRect();
+    const lastSlideRect = lastSlide.getBoundingClientRect();
+
+    if (sliderVertical) {
+      isLastSlide = lastSlideRect.top <= containerRect.bottom + imageGap;
+    } else {
+      isLastSlide = lastSlideRect.left <= containerRect.right + imageGap;
+    }
+
+    return isLastSlide;
+  }
+
+  window.addEventListener("resize", () => {
+    isLastSlideFullyVisible();
+  });
+
+  window.addEventListener("load", () => {
+    isLastSlideFullyVisible();
+  });
+
+  function handleLeftArrowClick() {
+    if (!endless && currentIndex === 0) {
+      updateArrowButtons();
       return;
     }
-    if (arrowButtons && leftArrow !== null && rightArrow !== null) {
-      rightArrow.style.opacity = 1;
-      rightArrow.style.cursor = "pointer";
-    }
+
+    isLastSlide = false;
 
     if (totalImages <= 1 || isTransitioning) return; // Prevent double click during transition
     isTransitioning = true;
@@ -100,25 +144,23 @@ function createCarousel(
     setTimeout(() => {
       carousel.style.transition = "none";
       isTransitioning = false;
+      if (!endless) {
+        updateArrowButtons();
+      }
     }, 500);
   }
 
   function handleRightArrowClick() {
-    if (!endless && currentIndex + currentIndex + 1 == totalImages) {
-      if (arrowButtons && leftArrow !== null && rightArrow !== null) {
-        leftArrow.style.opacity = 1;
-        leftArrow.style.cursor = "pointer";
-        rightArrow.style.opacity = 0.5;
-        rightArrow.style.cursor = "not-allowed";
-      }
+    if (!endless && currentIndex === totalImages - 1) {
       return;
     }
-    if (arrowButtons && leftArrow !== null && rightArrow !== null) {
-      leftArrow.style.opacity = 1;
-      leftArrow.style.cursor = "pointer";
+    if (!endless && isLastSlide) {
+      updateArrowButtons();
+      return;
     }
+    isLastSlideFullyVisible();
 
-    if (totalImages <= 1 || isTransitioning) return; // Prevent double click during transition
+    if (totalImages <= 1 || isTransitioning) return;
     isTransitioning = true;
 
     prevIndex = currentIndex;
@@ -141,6 +183,9 @@ function createCarousel(
         carousel.style.transition = "none";
         carousel.style.transform = "";
         isTransitioning = false;
+        if (!endless) {
+          updateArrowButtons();
+        }
         if (dynamicDots) {
           updateDots();
         }
@@ -225,7 +270,6 @@ function createCarousel(
           });
         } else {
           slide.style.userSelect = "none";
-          slide.style.cursor = "grabbing";
         }
       });
     }

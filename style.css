@@ -53,9 +53,6 @@ section p {
   flex-wrap: nowrap;
   height: 300px;
   background-color: aliceblue;
-}
-
-.slide {
   display: flex;
   align-items: center;
   justify-content: center;
