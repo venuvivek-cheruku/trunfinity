@@ -373,22 +373,23 @@ function createCarousel(
 
   //onHover arrows
   function addHoverSwipe() {
-    const halfCarouselWidth = carousel.offsetWidth / 2;
-    let activeEventListener = null;
+    let halfCarouselWidth = carousel.offsetWidth / 2;
 
     carousel.addEventListener("mousemove", function (e) {
       const xPos = e.pageX - carousel.getBoundingClientRect().left;
       this.classList.remove("cursor-prev", "cursor-next");
 
       if (xPos > halfCarouselWidth) {
-        this.classList.add("cursor-next");
+        halfCarouselWidth = carousel.offsetWidth / 2;
         handleRightArrowClick();
+        this.classList.add("cursor-next");
         if (autoplay && resetOnInteraction) {
           resetAutoplay(); // Add resetAutoplay function call
         }
       } else {
-        this.classList.add("cursor-prev");
+        halfCarouselWidth = carousel.offsetWidth / 2;
         handleLeftArrowClick();
+        this.classList.add("cursor-prev");
         if (autoplay && resetOnInteraction) {
           resetAutoplay(); // Add resetAutoplay function call
         }
@@ -399,7 +400,7 @@ function createCarousel(
   //Click Cursor Arrows
   function addCursorArrows() {
     if (carousel) {
-      const halfCarouselWidth = carousel.offsetWidth / 2;
+      let halfCarouselWidth = carousel.offsetWidth / 2;
       let activeEventListener = null;
 
       carousel.addEventListener("mousemove", function (e) {
@@ -413,9 +414,11 @@ function createCarousel(
         if (xPos > halfCarouselWidth) {
           this.classList.add("cursor-next");
           activeEventListener = handleRightArrowClick;
+          halfCarouselWidth = carousel.offsetWidth / 2;
         } else {
           this.classList.add("cursor-prev");
           activeEventListener = handleLeftArrowClick;
+          halfCarouselWidth = carousel.offsetWidth / 2;
         }
 
         carousel.addEventListener("click", activeEventListener, false);
