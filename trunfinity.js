@@ -99,14 +99,6 @@ function createCarousel(
     return isLastSlide;
   }
 
-  window.addEventListener("resize", () => {
-    isLastSlideFullyVisible();
-  });
-
-  window.addEventListener("load", () => {
-    isLastSlideFullyVisible();
-  });
-
   function handleLeftArrowClick() {
     if (!endless && currentIndex === 0) {
       updateArrowButtons();
@@ -381,12 +373,13 @@ function createCarousel(
 
   //onHover arrows
   function addHoverSwipe() {
-    const getCarouselWidth = carousel.getBoundingClientRect();
-    const halfCarouselWidth = getCarouselWidth.width / 2;
+    const halfCarouselWidth = carousel.offsetWidth / 2;
+    let activeEventListener = null;
 
     carousel.addEventListener("mousemove", function (e) {
-      const xPos = e.pageX - carousel.offsetLeft;
+      const xPos = e.pageX - carousel.getBoundingClientRect().left;
       this.classList.remove("cursor-prev", "cursor-next");
+
       if (xPos > halfCarouselWidth) {
         this.classList.add("cursor-next");
         handleRightArrowClick();
@@ -406,11 +399,11 @@ function createCarousel(
   //Click Cursor Arrows
   function addCursorArrows() {
     if (carousel) {
-      const getCarouselWidth = carousel.getBoundingClientRect();
-      const halfCarouselWidth = getCarouselWidth.width / 2;
+      const halfCarouselWidth = carousel.offsetWidth / 2;
       let activeEventListener = null;
+
       carousel.addEventListener("mousemove", function (e) {
-        const xPos = e.pageX - carousel.offsetLeft;
+        const xPos = e.pageX - carousel.getBoundingClientRect().left;
         this.classList.remove("cursor-prev", "cursor-next");
 
         if (activeEventListener) {
@@ -595,4 +588,25 @@ function createCarousel(
   if (autoplay) {
     startAutoplay();
   }
+
+  //window resize and load
+  window.addEventListener("resize", () => {
+    isLastSlideFullyVisible();
+    if (cursorArrows) {
+      addCursorArrows();
+    }
+    if (hoverSwipe) {
+      addHoverSwipe();
+    }
+  });
+
+  window.addEventListener("load", () => {
+    isLastSlideFullyVisible();
+    if (cursorArrows) {
+      addCursorArrows();
+    }
+    if (hoverSwipe) {
+      addHoverSwipe();
+    }
+  });
 }
